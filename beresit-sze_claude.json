@@ -1,0 +1,177 @@
+{
+  "keep_ratio_estimate": 0.68,
+  "keep_ratio_if_all_questions_cut": 0.62,
+  "total_duration": "00:27:09,248",
+  "cuts": [
+    {
+      "start": "00:00:00,000",
+      "end": "00:00:24,920",
+      "category": "K1",
+      "confidence": "high",
+      "reason": "Köszöntés, kamera- és mikrofonbeállítás a tanítás előtt.",
+      "first_words": "Szervusz! Na, egy picit ezt a",
+      "last_words": "is. Meg mikrofonozzuk. Jó. Na, szóval,"
+    },
+    {
+      "start": "00:00:45,443",
+      "end": "00:01:04,429",
+      "category": "K2",
+      "confidence": "high",
+      "reason": "Visszhang/hangprobléma és annak egyeztetése a résztvevőkkel.",
+      "first_words": "Most valaki visszhangzik. Aha. Nem, te.",
+      "last_words": "most már nem. Oké, köszönöm, köszönöm."
+    },
+    {
+      "start": "00:01:30,898",
+      "end": "00:02:59,197",
+      "category": "K3",
+      "confidence": "high",
+      "reason": "Érkező résztvevők, pénz-/maszer-elszámolás, a mondat félbeszakad; a tanító utána megismétli az összefoglalót. A vágás után a gondolat folytonos marad (\"…eszünk húst, és akkor már mi a kérdés…\").",
+      "first_words": "és már csak olyan egyszerű prózai",
+      "last_words": "volt egy özönvíz, volt egy húsmengedés,"
+    },
+    {
+      "start": "00:03:35,546",
+      "end": "00:04:49,205",
+      "category": "K2",
+      "confidence": "high",
+      "reason": "Internetkapcsolat megszakadása, várakozás, műszaki egyeztetés.",
+      "first_words": "Oh! Elment a netem? Ajj, várj!",
+      "last_words": "most visszajött, visszajött. Visszajött a csatlakozás."
+    },
+    {
+      "start": "00:05:30,408",
+      "end": "00:05:54,713",
+      "category": "K4",
+      "confidence": "high",
+      "reason": "Telefonhívás a tanítás közben.",
+      "first_words": "Halló? Persze, persze, persze. De ugyanolyan",
+      "last_words": "ugyanannyiba kerül. Na. Jó. Szóval. Na."
+    },
+    {
+      "start": "00:11:36,095",
+      "end": "00:12:05,588",
+      "category": "K2",
+      "confidence": "medium",
+      "reason": "Keresgélés a megjelenítővel/forrásnézővel, a mondat félbemarad; a tényleges idézet utána kezdődik. (Ha a képernyő látszik a videón és ez fontos, tartsd meg.)",
+      "first_words": "és ebben a magyarázaton ő egy",
+      "last_words": "a magyarázat. Szóval, 11. pont. Igen."
+    },
+    {
+      "start": "00:12:59,050",
+      "end": "00:13:08,137",
+      "category": "K4",
+      "confidence": "high",
+      "reason": "Vizet hoznak, mellékes közbeszólás.",
+      "first_words": "Hú, ha hozol egy pohár vizet",
+      "last_words": "köszönöm. Én szimcha elo be máim."
+    },
+    {
+      "start": "00:13:15,451",
+      "end": "00:13:23,491",
+      "category": "K6",
+      "confidence": "medium",
+      "reason": "Tévedés/keresgélés a forrásban, érthetetlen töredék.",
+      "first_words": "Nem ez az. Bocsánat, itt egy",
+      "last_words": "Bocsánat, itt egy událev. Alajáin. Igen,"
+    },
+    {
+      "start": "00:14:11,802",
+      "end": "00:14:31,510",
+      "category": "K2",
+      "confidence": "high",
+      "reason": "Mellékes közbeszólás, vízhozatal, várakozás ('Megvárjuk a kokogást'), érkező szervusz; hosszú csend utána.",
+      "first_words": "Ráadásul úgy, Csodás, köszönöm. Borulj hát",
+      "last_words": "sákkal, hajnalm. Megvárjuk a kokogást. Szervusz!"
+    },
+    {
+      "start": "00:16:42,967",
+      "end": "00:17:04,846",
+      "category": "K1",
+      "confidence": "high",
+      "reason": "Újabb érkezők köszöntése, töredékes közbeszólások.",
+      "first_words": "Jaj, jaj, jaj. Hát. Amit a",
+      "last_words": "szoktak. Szoktaken, igen. Jó estét kívánok!"
+    },
+    {
+      "start": "00:17:58,582",
+      "end": "00:18:06,742",
+      "category": "K4",
+      "confidence": "medium",
+      "reason": "Közbeszólás a jegyzetelőnek, nem tartalom.",
+      "first_words": "Ne írj! Ez a lényeg! Ez",
+      "last_words": "gyorsan még mielőtt itt ránk sötétedik."
+    },
+    {
+      "start": "00:19:17,183",
+      "end": "00:22:01,541",
+      "category": "K5",
+      "confidence": "high",
+      "reason": "Hosszú mellékszál Lettország/Litvánia, Smulovics és Berlin-emlékek; a tanító maga zárja le ('menjünk tovább ettől a témától').",
+      "first_words": "Latvia, az Litvánia. A Lituánia, az",
+      "last_words": "Az még a legjobb ezek közül."
+    },
+    {
+      "start": "00:22:17,095",
+      "end": "00:22:22,877",
+      "category": "K3",
+      "confidence": "medium",
+      "reason": "Névvel kapcsolatos mellékes poén/ismétlés.",
+      "first_words": "Múljon, hogy hívták, mint a gervai",
+      "last_words": "a gervai Laci-t. Avrohomi Yitzchok. Cook."
+    },
+    {
+      "start": "00:24:18,218",
+      "end": "00:24:34,717",
+      "category": "K5",
+      "confidence": "medium",
+      "reason": "Mellékes hasonlat, amit a tanító maga városi legendának nevez; érzékeny, nem járul hozzá az érvhez.",
+      "first_words": "Mint a muszlimok, amikor bemennek az",
+      "last_words": "ha nincs alkoholiban. Igen. Nehéz. Igen."
+    },
+    {
+      "start": "00:27:03,588",
+      "end": "00:27:09,248",
+      "category": "K9",
+      "confidence": "high",
+      "reason": "Búcsúzás és záró csevej a tanulság után.",
+      "first_words": "Skajak, szép estét, sziasztok! Csajok vannak.",
+      "last_words": "sziasztok! Csajok vannak. De, van kettő."
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "start": "00:04:55,781",
+      "end": "00:05:29,368",
+      "topic": "hétköznapi hústmentesség, hal ára",
+      "question": "Elmeséled, hogy hétköznap nem eszel húst, halat választasz, mert ugyanannyiba kerül. Ez maradhat?",
+      "suggestion": "cut",
+      "default_if_unanswered": "keep",
+      "first_words": "Én megvalóm, őszintén én hétköznaphagyak nincs",
+      "last_words": "de erre mindjárt visszatérünk az állatbarátságra."
+    },
+    {
+      "id": "Q2",
+      "start": "00:17:06,066",
+      "end": "00:17:48,933",
+      "topic": "péntek esti vacsora a rabbinál, hal hús helyett",
+      "question": "Elmeséled a péntek esti vacsorát a rabbinál, ahol nem volt hús (hal volt). Ez maradhat?",
+      "suggestion": "keep",
+      "default_if_unanswered": "keep",
+      "first_words": "Én szoktam enni húst ünnepnapon és",
+      "last_words": "Na hal volt. De nem kötelező."
+    },
+    {
+      "id": "Q3",
+      "start": "00:25:40,442",
+      "end": "00:26:01,935",
+      "topic": "náci Németország, okt. 7., szamárháton robbanóanyag",
+      "question": "A negyedik érvnél náci Németország, október 7. és a szamáron küldött robbanóanyag példája hangzik el, bizonytalan megfogalmazással. Ez maradhat?",
+      "suggestion": "keep",
+      "default_if_unanswered": "keep",
+      "first_words": "Náci Németországban nem tudom most is,",
+      "last_words": "jöttek az állatvédők, hogy szegény állat."
+    }
+  ]
+}
