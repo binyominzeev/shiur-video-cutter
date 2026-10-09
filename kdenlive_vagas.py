@@ -358,7 +358,8 @@ def rebuild_guides(seq, cuts, new_total, junction_guides):
 # --------------------------------------------------------------------------
 def _find_player():
     for name, fn in (
-        ("mpv", lambda v, s, d: ["mpv", "--start=%.2f" % s, "--length=%.2f" % d, "--force-window=yes", v]),
+        ("mpv", lambda v, s, d: ["mpv", "--force-window=yes", "--keep-open=yes",
+                         "edl://%%%d%%%s,%.2f,%.2f" % (len(v.encode("utf-8")), v, s, d)]),
         ("vlc", lambda v, s, d: ["vlc", "--start-time=%.2f" % s, "--stop-time=%.2f" % (s + d), v]),
         ("ffplay", lambda v, s, d: ["ffplay", "-ss", "%.2f" % s, "-t", "%.2f" % d, "-autoexit", v]),
     ):
@@ -380,10 +381,18 @@ class ConsoleAsker:
         print(q["question"])
         print("Javaslat: %s" % ("megtartani" if q.get("suggestion") == "keep" else "kivágni"))
 
+        proc = [None]
+
+        def stop():
+            if proc[0] and proc[0].poll() is None:
+                proc[0].terminate()
+            proc[0] = None
+
         def play():
+            stop()
             if self.video and self.player:
                 st = max(0, s - self.ctx)
-                subprocess.Popen(self.player(self.video, st, e - st + self.ctx),
+                proc[0] = subprocess.Popen(self.player(self.video, st, e - st + self.ctx),
                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
                 print("(nincs lejátszó/videó, nem tudom lejátszani)")
@@ -391,14 +400,18 @@ class ConsoleAsker:
         while True:
             a = input("[m]aradjon / [k]ivágom / [l]ejátszás újra / [j]avaslat mindenre / [x] megszakít: ").strip().lower()
             if a in ("m", "maradjon", "keep"):
+                stop()
                 return "keep"
             if a in ("k", "kivag", "cut"):
+                stop()
                 return "cut"
             if a == "l":
                 play()
             elif a == "j":
+                stop()
                 return "suggest_all"
             elif a == "x":
+                stop()
                 return "abort"
 
 
