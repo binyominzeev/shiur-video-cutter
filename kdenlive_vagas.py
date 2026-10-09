@@ -21,7 +21,6 @@ Hasznos kapcsolók:
     --context SEC        ennyi mp előzmény/utózmány a lejátszóban (alap: 5)
     --margin SEC         ennyi mp-et meghagy a vágások két szélén (alap: 0)
     --no-audio           hang nélküli lejátszás (ha nincs hangeszköz)
-    --no-junction-guides ne tegyen jelölőt (guide) a vágási pontokra
     --dry-run            csak a terv, nem ír fájlt
 """
 import argparse
@@ -276,7 +275,7 @@ def ripple_playlist(pl, keeps, new_starts, fps, ids):
 
 
 # --------------------------------------------------------------------------
-# Csoportok (groups) és guide-ok
+# Csoportok (groups)
 # --------------------------------------------------------------------------
 def _leaf_positions(node, acc):
     if node.get("leaf") == "clip" or "data" in node:
@@ -318,39 +317,6 @@ def rebuild_groups(seq, new_starts):
     else:
         log.warning("A csoportszerkezet nem egyszerű (%d csoport), ezért kiürítem.", len(groups))
         p.text = "[]"
-
-
-def rebuild_guides(seq, cuts, new_total, junction_guides):
-    p = prop(seq, "kdenlive:sequenceproperties.guides")
-    guides = []
-    if p is not None and (p.text or "").strip():
-        try:
-            guides = json.loads(p.text)
-        except ValueError:
-            log.warning("A guide-ok nem olvashatók, kihagyom.")
-            guides = []
-    out, dropped = [], 0
-    for g in guides:
-        pos = int(g["pos"])
-        if any(s <= pos < e for s, e, _ in cuts):
-            dropped += 1
-            continue
-        g = dict(g)
-        g["pos"] = pos - removed_before(pos, cuts)
-        out.append(g)
-    added = 0
-    if junction_guides:
-        for s, e, label in cuts:
-            npos = s - removed_before(s, cuts)
-            if 0 < npos < new_total:
-                out.append({"comment": ("✂ " + label)[:70], "duration": 0, "pos": npos, "type": 6})
-                added += 1
-    out.sort(key=lambda g: g["pos"])
-    if p is None:
-        p = ET.SubElement(seq, "property", {"name": "kdenlive:sequenceproperties.guides"})
-    p.text = json.dumps(out, indent=4, ensure_ascii=False) + "\n"
-    log.info("Guide-ok: %d megmaradt, %d kiesett a vágott részekkel, %d vágási jelölő",
-             len(out) - added, dropped, added)
 
 
 # --------------------------------------------------------------------------
@@ -418,8 +384,8 @@ class ConsoleAsker:
 def make_qt_asker(video, ctx, autoplay=True, audio=True):
     """PySide6-os asker, ha elérhető; különben None."""
     try:
-        from PySide6.QtCore import Qt, QUrl, QRect
-        from PySide6.QtGui import QFont, QKeySequence, QPainter, QColor, QShortcut
+        from PySide6.QtCore import QCoreApplication, QEvent, Qt, QUrl
+        from PySide6.QtGui import QFont, QKeySequence, QShortcut
         from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer
         from PySide6.QtMultimediaWidgets import QVideoWidget
         from PySide6.QtWidgets import (QApplication, QDialog, QHBoxLayout, QLabel, QPushButton,
@@ -433,7 +399,6 @@ def make_qt_asker(video, ctx, autoplay=True, audio=True):
 
         def __init__(self):
             super().__init__(Qt.Horizontal)
-            self.hl = None
 
         def _groove(self):
             opt = QStyleOptionSlider()
@@ -448,17 +413,6 @@ def make_qt_asker(video, ctx, autoplay=True, audio=True):
                 self.setValue(v)
                 self.sliderMoved.emit(v)
             super().mousePressEvent(ev)
-
-        def paintEvent(self, ev):
-            super().paintEvent(ev)
-            if self.hl and self.maximum() > self.minimum():
-                _, g = self._groove()
-                span = self.maximum() - self.minimum()
-                x1 = g.x() + int((self.hl[0] - self.minimum()) / span * g.width())
-                x2 = g.x() + int((self.hl[1] - self.minimum()) / span * g.width())
-                p = QPainter(self)
-                p.fillRect(QRect(x1, g.center().y() - 5, max(2, x2 - x1), 10), QColor(255, 140, 0, 120))
-                p.end()
 
     class Dlg(QDialog):
         def __init__(self, q, idx, total):
@@ -514,7 +468,26 @@ def make_qt_asker(video, ctx, autoplay=True, audio=True):
 
                 self.slider = RangeSlider()
                 self.slider.setRange(self.ws, self.we)
-                self.slider.hl = (self.qs, self.qe)
+                span = max(1, self.we - self.ws)
+                highlight_start = (self.qs - self.ws) / span
+                highlight_end = (self.qe - self.ws) / span
+                self.slider.setStyleSheet(
+                    "QSlider::groove:horizontal {"
+                    "height: 6px;"
+                    "background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+                    " stop:0 #888888,"
+                    " stop:%f #888888,"
+                    " stop:%f #ff8c00,"
+                    " stop:%f #ff8c00,"
+                    " stop:%f #888888,"
+                    " stop:1 #888888);"
+                    "}"
+                    "QSlider::handle:horizontal {"
+                    "width: 12px; margin: -4px 0; border-radius: 6px;"
+                    "background: #eeeeee; border: 1px solid #666666;"
+                    "}"
+                    % (highlight_start, highlight_start, highlight_end, highlight_end)
+                )
                 self.slider.sliderMoved.connect(self.player.setPosition)
                 self.slider.sliderPressed.connect(lambda: setattr(self, "_dragging", True))
                 self.slider.sliderReleased.connect(lambda: setattr(self, "_dragging", False))
@@ -613,11 +586,17 @@ def make_qt_asker(video, ctx, autoplay=True, audio=True):
             d.show()
             d.raise_()
             d.activateWindow()
-            d.exec()
-            r = d.result_value
-            d.player.setSource(QUrl())
-            d.deleteLater()
-            return r
+            try:
+                d.exec()
+                return d.result_value
+            finally:
+                d.player.stop()
+                d.player.setSource(QUrl())
+                d.player.setVideoOutput(None)
+                if d.audio is not None:
+                    d.player.setAudioOutput(None)
+                d.deleteLater()
+                QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
 
     return QtAsker()
 
@@ -752,9 +731,9 @@ def run(args):
     set_prop(prj.seq, "kdenlive:duration", frames_to_tc(new_total, fps))
     set_prop(prj.seq, "kdenlive:maxduration", new_total)
     set_prop(prj.seq, "kdenlive:sequenceproperties.position", 0)
+    set_prop(prj.seq, "kdenlive:sequenceproperties.guides", "[]")
 
     rebuild_groups(prj.seq, new_starts)
-    rebuild_guides(prj.seq, cuts, new_total, not args.no_junction_guides)
 
     ET.indent(prj.tree, space=" ")
     xml = ET.tostring(prj.root, encoding="unicode")
@@ -780,7 +759,6 @@ def main():
                     help="ennél közelebbi vágásokat összevon, hogy ne maradjon pár mp-es szilánk (alap 1.5)")
     ap.add_argument("--no-audio", action="store_true", help="hang nélküli lejátszás (hangeszköz nélküli gépen)")
     ap.add_argument("--no-autoplay", action="store_true", help="ne induljon el automatikusan a lejátszás")
-    ap.add_argument("--no-junction-guides", action="store_true", help="ne kerüljön jelölő a vágási pontokra")
     ap.add_argument("--dry-run", action="store_true", help="csak a terv, nem ír fájlt")
     args = ap.parse_args()
 

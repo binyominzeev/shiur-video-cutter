@@ -1,1 +1,4 @@
 archiv/*
+*.kdenlive
+*.srt
+*.json

@@ -32,10 +32,10 @@ AI-támogatott vágás tanítás-videókhoz (Kdenlive). Az LLM csak vágási pon
 | `--context SEC` | előzmény/utózmány a lejátszóban (alap: 5) |
 | `--video FILE` | kérdéseknél lejátszandó videó |
 | `--no-audio` | hang nélküli lejátszás |
-| `--no-junction-guides` | ne tegyen jelölőt a vágási pontokra |
 | `--dry-run` | csak terv, nem ír fájlt |
 
 A kivágott részek "ripple" módon esnek ki (nincs lyuk a timeline-on).
+A kimeneti projektből minden timeline-jelölő törlődik.
 
 ## Fájlok
 
